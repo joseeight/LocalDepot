@@ -1,0 +1,41 @@
+{
+  "name": "LocalDepot",
+  "author": "José Antonio Márquez Russo",
+  "version": "0.0.1",
+  "description": "...",
+  "main": "prototype/localdepot.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Tradeshift/LocalDepot"
+  },
+  "maintainers": [
+    {
+      "name": "José Antonio Márquez Russo",
+      "email": "jam@tradeshift.com",
+      "web": "https://twitter.com/joseeight"
+    }
+  ],
+  "contributors": [
+    {
+      "name": "José Antonio Márquez Russo",
+      "email": "jam@tradeshift.com",
+      "web": "https://twitter.com/joseeight"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/Tradeshift/LocalDepot/issues"
+  },
+  "licenses": [{
+    "type": "MIT",
+    "url": "http://opensource.org/licenses/MIT"
+  }],
+  "devDependencies": {
+    "grunt": "~0.4.0",
+    "grunt-contrib": "~0.7.0",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-jasmine": "~0.4.1",
+    "grunt-shell": "~0.4.0",
+    "grunt-contrib-uglify": "~0.2.4",
+    "grunt-githooks": "~0.3.0"
+  }
+}

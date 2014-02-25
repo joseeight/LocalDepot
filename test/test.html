@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="../prototype/localdepot.js"></script>
+    <script type="text/javascript">
+      window.addEventListener('load', function () {
+        if (window.LocalDepot) {
+          function mySuccess (depot) {
+            var item = Math.random();
+            console.log('Test value: ' + item);
+            //
+            depot.setItem('testing', item, function (saved) {
+              if (saved) {
+                //
+                depot.getItem('testing', function (item) {
+                  console.log('Got item with value: ' + item);
+                });
+                //
+                depot.hasItem('testing', function (exists) {
+                  if (exists) {
+                    console.log('Item "testing" exists!');
+                    //
+                    depot.removeItem('testing', function (success) {
+                      if (success) {
+                        console.log('testing was deleted!');
+                        depot.getKeys(function (result) {
+                          console.log(result);
+                        });
+                      } else {
+                        console.log('testing was not deleted!');
+                      }
+                    });
+                  } else {
+                    console.log('Item "testing" doesn\'t exists!');
+                  }
+                });
+                //
+                depot.getKeys(function (result) {
+                  console.log(result);
+                  //
+                  //depot.clear();
+                });
+              }
+            });
+            //
+            depot.hasItem('random', function (exists) {
+              if (exists) {
+                console.log('Item "random" exists!');
+              } else {
+                console.log('Item "random" doesn\'t exists!');
+              }
+            });
+          }
+          function myError (error) {
+            console.log(error);
+          }
+          LocalDepot.requestDepot('test', mySuccess, myError);
+        }
+      }, false);
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
