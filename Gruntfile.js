@@ -5,6 +5,17 @@ module.exports = function(grunt) {
 
     pkg: grunt.file.readJSON('package.json'),
     
+    karma: {
+      test: {
+        options: {
+          files: ['prototype/localdepot.js', 'specs/localdepot_test.js']
+        },
+        singleRun: true,
+        frameworks: ['jasmine'],
+        browsers: ['Chrome', 'Firefox', 'Safari', 'Opera']
+      }
+    },
+    
     // JSHint with options.
     jshint: {
       options: {
@@ -68,6 +79,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
   grunt.loadNpmTasks('grunt-githooks');
+  grunt.loadNpmTasks('grunt-karma');
 
-  grunt.registerTask('default', ['shell', 'jshint', 'jasmine', 'uglify']);
+  grunt.registerTask('default', ['shell', 'jshint', 'karma', 'uglify']);
 };

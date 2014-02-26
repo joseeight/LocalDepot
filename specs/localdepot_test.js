@@ -18,7 +18,7 @@ describe('LocalDepot', function() {
 
     beforeEach(function() {
       test = new LocalDepot.Depot(
-          'test', LocalDepot.storageType.INDEXEDDB);
+          'test', LocalDepot.deviceStorageType);
       callback = function() {};
     });
 
@@ -30,7 +30,7 @@ describe('LocalDepot', function() {
     it('should have valid structure', function() {
       expect(test.constructor).toBe(LocalDepot.Depot);
       expect(test.name).toBe('test');
-      expect(test.storageType).toBe(LocalDepot.storageType.INDEXEDDB);
+      expect(test.storageType).toBe(LocalDepot.deviceStorageType);
       expect(typeof test.getItem).toBe('function');
       expect(test.getItem.length).toBe(2);
       expect(typeof test.getKeys).toBe('function');
@@ -209,34 +209,23 @@ describe('LocalDepot', function() {
   });
 
   describe('LocalDepot._getStorageSupportedByBrowser', function() {
-    beforeEach(function() {
-      delete window.indexedDB;
-      delete window.localStorage;
-    });
-    afterEach(function() {
-      delete window.indexedDB;
-      delete window.localStorage;
-    });
-    it('should return indexeddb', function() {
-      window.indexedDB = {};
-      var test = LocalDepot._getStorageSupportedByBrowser();
-      expect(test).toBe(LocalDepot.storageType.INDEXEDDB);
-    });
-    it('should return websql', function() {
-      var test = LocalDepot._getStorageSupportedByBrowser();
-      expect(test).toBe(LocalDepot.storageType.WEBSQL);
-    });
-    // Not working, can't overwrite or spyOn openDatabase.
-    it('should return localstorage', function() {
-      window.localStorage = {};
-      var test = LocalDepot._getStorageSupportedByBrowser();
-      //expect(test).toBe(LocalDepot.storageType.LOCALSTORAGE);
-    });
-    // Not working, can't overwrite or spyOn openDatabase.
-    it('should return undefined', function() {
-      var test = LocalDepot._getStorageSupportedByBrowser();
-      //expect(test).toBe(undefined);
-    });
+    /*
+expect(LocalDepot.deviceStorageType).toBe(
+    LocalDepot.storageType.INDEXEDDB);
+    expect(LocalDepot.deviceStorageType).toBe(
+    LocalDepot.storageType.WEBSQL);
+    expect(LocalDepot.deviceStorageType).toBe(
+    LocalDepot.storageType.LOCALSTORAGE);
+    expect(LocalDepot.deviceStorageType).toBe(
+    undefined);
+    */
+
+    //var agent = navigator.userAgent.toLowerCase();
+    //agent.indexOf('chrome') > -1
+    //agent.indexOf('firefox') > -1
+    //agent.indexOf('msie') > -1
+    //agent.indexOf('safari') > -1
+
   });
 
 });
