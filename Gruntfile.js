@@ -6,14 +6,58 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     
     karma: {
-      test: {
+      chrome: {
         options: {
+          configFile: 'karma.conf.js',
           files: ['prototype/localdepot.js', 'specs/localdepot_test.js']
         },
         singleRun: true,
         frameworks: ['jasmine'],
-        browsers: ['Chrome', 'Firefox', 'Safari', 'Opera']
+        browsers: ['Chrome']
+        // Use below 'browsers' if BrowserStack account is enabled in config.
+        //browsers: ['bs_chrome_mac', 'bs_chrome_win']
+      },
+      firefox: {
+        options: {
+          configFile: 'karma.conf.js',
+          files: ['prototype/localdepot.js', 'specs/localdepot_test.js']
+        },
+        singleRun: true,
+        frameworks: ['jasmine'],
+        browsers: ['Firefox']
+        // Use below 'browsers' if BrowserStack account is enabled in config.
+        //browsers: ['bs_firefox_mac', 'bs_firefox_win']
+      },
+      // Use below 'browsers' if BrowserStack account is enabled in config.
+      /*
+safari: {
+        options: {
+          configFile: 'karma.conf.js',
+          files: ['prototype/localdepot.js', 'specs/localdepot_test.js']
+        },
+        singleRun: true,
+        frameworks: ['jasmine'],
+        browsers: ['bs_safari_mac']
+      },
+      ie_modern: {
+        options: {
+          configFile: 'karma.conf.js',
+          files: ['prototype/localdepot.js', 'specs/localdepot_test.js']
+        },
+        singleRun: true,
+        frameworks: ['jasmine'],
+        browsers: ['bs_ie_10', 'bs_ie_11']
+      },
+      ie_legacy: {
+        options: {
+          configFile: 'karma.conf.js',
+          files: ['prototype/localdepot.js', 'specs/localdepot_test.js']
+        },
+        singleRun: true,
+        frameworks: ['jasmine'],
+        browsers: ['bs_ie_9']
       }
+*/
     },
     
     // JSHint with options.
