@@ -45,72 +45,76 @@ describe('LocalDepot', function() {
       expect(test.clear.length).toBe(0);
     });
 
-    describe('LocalDepot.Depot.getItem', function() {
-      it('should try to getItem via interface', function() {
-        spyOn(LocalDepot._Depot, 'getItem');
+    describe('interface', function() {
+      describe('getItem', function() {
+        it('should try to getItem', function() {
+          spyOn(LocalDepot._Depot, 'getItem');
 
-        test.getItem('test', callback);
+          test.getItem('test', callback);
 
-        expect(LocalDepot._Depot.getItem).toHaveBeenCalledWith(
-            test, 'test', callback);
+          expect(LocalDepot._Depot.getItem).toHaveBeenCalledWith(
+              test, 'test', callback);
+        });
       });
-    });
 
-    describe('LocalDepot.Depot.getKeys', function() {
-      it('should try to getKeys via interface', function() {
-        spyOn(LocalDepot._Depot, 'getKeys');
+      describe('getKeys', function() {
+        it('should try to getKeys', function() {
+          spyOn(LocalDepot._Depot, 'getKeys');
 
-        test.getKeys(callback);
+          test.getKeys(callback);
 
-        expect(LocalDepot._Depot.getKeys).toHaveBeenCalledWith(test, callback);
+          expect(LocalDepot._Depot.getKeys).toHaveBeenCalledWith(
+              test, callback);
+        });
       });
-    });
 
-    describe('LocalDepot.Depot.setItem', function() {
-      it('should try to setItem via interface', function() {
-        spyOn(LocalDepot._Depot, 'setItem');
+      describe('setItem', function() {
+        it('should try to setItem', function() {
+          spyOn(LocalDepot._Depot, 'setItem');
 
-        test.setItem('test', 'value', callback);
+          test.setItem('test', 'value', callback);
 
-        expect(LocalDepot._Depot.setItem).toHaveBeenCalledWith(
-            test, 'test', 'value', callback);
+          expect(LocalDepot._Depot.setItem).toHaveBeenCalledWith(
+              test, 'test', 'value', callback);
+        });
       });
-    });
 
-    describe('LocalDepot.Depot.hasItem', function() {
-      it('should try to check hasItem via interface', function() {
-        spyOn(LocalDepot._Depot, 'hasItem');
+      describe('hasItem', function() {
+        it('should try to check hasItem', function() {
+          spyOn(LocalDepot._Depot, 'hasItem');
 
-        test.hasItem('test', callback);
+          test.hasItem('test', callback);
 
-        expect(LocalDepot._Depot.hasItem).toHaveBeenCalledWith(
-            test, 'test', callback);
+          expect(LocalDepot._Depot.hasItem).toHaveBeenCalledWith(
+              test, 'test', callback);
+        });
       });
-    });
 
-    describe('LocalDepot.Depot.removeItem', function() {
-      it('should try to removeItem via interface', function() {
-        spyOn(LocalDepot._Depot, 'removeItem');
+      describe('removeItem', function() {
+        it('should try to removeItem', function() {
+          spyOn(LocalDepot._Depot, 'removeItem');
 
-        test.removeItem('test', callback);
+          test.removeItem('test', callback);
 
-        expect(LocalDepot._Depot.removeItem).toHaveBeenCalledWith(
-            test, 'test', callback);
+          expect(LocalDepot._Depot.removeItem).toHaveBeenCalledWith(
+              test, 'test', callback);
+        });
       });
-    });
 
-    describe('LocalDepot.Depot.clear', function() {
-      it('should try to clear Depot via interface', function() {
-        spyOn(LocalDepot._Depot, 'clear');
+      describe('clear', function() {
+        it('should try to clear Depot', function() {
+          spyOn(LocalDepot._Depot, 'clear');
 
-        test.clear();
+          test.clear();
 
-        expect(LocalDepot._Depot.clear).toHaveBeenCalledWith(test);
+          expect(LocalDepot._Depot.clear).toHaveBeenCalledWith(test);
+        });
       });
     });
   });
 
   describe('LocalDepot._Depot', function() {
+
     it('should have valid structure', function() {
       expect(typeof LocalDepot._Depot.getItem).toBe('function');
       expect(LocalDepot._Depot.getItem.length).toBe(3);
@@ -130,45 +134,53 @@ describe('LocalDepot', function() {
       expect(LocalDepot._Depot.closeIndexedDb.length).toBe(1);
     });
 
-    describe('LocalDepot._Depot.getItem', function() {
-      it('should ', function() {
+    describe('method', function() {
+      beforeEach(function() {
+        spyOn(LocalDepot._Depot, 'openIndexedDb');
+        spyOn(LocalDepot._Depot, 'closeIndexedDb');
+      });
+
+      describe('getItem', function() {
+        it('should ', function() {
+        });
+      });
+
+      describe('getKeys', function() {
+        it('should ', function() {
+        });
+      });
+
+      describe('setItem', function() {
+        it('should ', function() {
+        });
+      });
+
+      describe('hasItem', function() {
+        it('should ', function() {
+        });
+      });
+
+      describe('removeItem', function() {
+        it('should ', function() {
+        });
+      });
+
+      describe('clear', function() {
+        it('should ', function() {
+        });
+      });
+
+      describe('openIndexedDb', function() {
+        it('should ', function() {
+        });
+      });
+
+      describe('closeIndexedDb', function() {
+        it('should ', function() {
+        });
       });
     });
 
-    describe('LocalDepot._Depot.getKeys', function() {
-      it('should ', function() {
-      });
-    });
-
-    describe('LocalDepot._Depot.setItem', function() {
-      it('should ', function() {
-      });
-    });
-
-    describe('LocalDepot._Depot.hasItem', function() {
-      it('should ', function() {
-      });
-    });
-
-    describe('LocalDepot._Depot.removeItem', function() {
-      it('should ', function() {
-      });
-    });
-
-    describe('LocalDepot._Depot.clear', function() {
-      it('should ', function() {
-      });
-    });
-
-    describe('LocalDepot._Depot.openIndexedDb', function() {
-      it('should ', function() {
-      });
-    });
-
-    describe('LocalDepot._Depot.closeIndexedDb', function() {
-      it('should ', function() {
-      });
-    });
   });
 
   describe('LocalDepot.requestDepot', function() {
