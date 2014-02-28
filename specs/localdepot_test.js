@@ -221,23 +221,25 @@ describe('LocalDepot', function() {
   });
 
   describe('LocalDepot._getStorageSupportedByBrowser', function() {
-    /*
-expect(LocalDepot.deviceStorageType).toBe(
-    LocalDepot.storageType.INDEXEDDB);
-    expect(LocalDepot.deviceStorageType).toBe(
-    LocalDepot.storageType.WEBSQL);
-    expect(LocalDepot.deviceStorageType).toBe(
-    LocalDepot.storageType.LOCALSTORAGE);
-    expect(LocalDepot.deviceStorageType).toBe(
-    undefined);
-    */
-
-    //var agent = navigator.userAgent.toLowerCase();
-    //agent.indexOf('chrome') > -1
-    //agent.indexOf('firefox') > -1
-    //agent.indexOf('msie') > -1
-    //agent.indexOf('safari') > -1
-
+    var agent = navigator.userAgent.toLowerCase();
+    it('should detect storage based on browser expectations', function() {
+      if (agent.indexOf('chrome') > -1 || agent.indexOf('firefox') > -1) {
+        expect(LocalDepot.deviceStorageType).toBe(
+            LocalDepot.storageType.INDEXEDDB);
+      } else if (agent.indexOf('safari') > -1) {
+        expect(LocalDepot.deviceStorageType).toBe(
+            LocalDepot.storageType.WEBSQL);
+      } else if (agent.indexOf('msie') > -1 ||
+          agent.indexOf('trident') > -1) {
+        if (agent.indexOf('msie 9.0') > -1) {
+          expect(LocalDepot.deviceStorageType).toBe(
+              LocalDepot.storageType.LOCALSTORAGE);
+        } else {
+          expect(LocalDepot.deviceStorageType).toBe(
+              LocalDepot.storageType.INDEXEDDB);
+        }
+      }
+    });
   });
 
 });

@@ -595,7 +595,7 @@ if (typeof window !== 'undefined') {
           function _getStorageSupportedByBrowser() {
         var storageType;
         // IndexedDB is the preferred method.
-        if ('indexedDB' in window) {
+        if (window.indexedDB !== undefined) {
           storageType = LocalDepot.storageType.INDEXEDDB;
         } else if (window.openDatabase) {
           // Fallback support for Safari.
