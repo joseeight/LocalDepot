@@ -1,5 +1,6 @@
 /* Globals exposed by Jasmine*/
-/* global jasmine, describe, it, expect, afterEach, beforeEach, spyOn */
+/* global jasmine, describe, it, expect, afterEach, beforeEach, spyOn,
+   waitsFor, runs, alert */
 /* Globals exposed by LocalDepot*/
 /* global LocalDepot */
 describe('LocalDepot', function() {
@@ -135,39 +136,206 @@ describe('LocalDepot', function() {
     });
 
     describe('method', function() {
+      var depot;
+
       beforeEach(function() {
-        spyOn(LocalDepot._Depot, 'openIndexedDb');
-        spyOn(LocalDepot._Depot, 'closeIndexedDb');
+        depot = new LocalDepot.Depot('test',
+            LocalDepot.storageType.INDEXEDDB);
+      });
+
+      afterEach(function() {
+        depot = null;
       });
 
       describe('getItem', function() {
-        it('should ', function() {
+        it('should use INDEXEDDB and work', function() {
+          // Test per storage type.
+          if (LocalDepot.deviceStorageType ===
+              LocalDepot.storageType.INDEXEDDB) {
+            var done, test, success = 'win', request = {};
+
+
+            // TODO (jam@): Move to mock.
+            spyOn(LocalDepot._Depot, 'openIndexedDb').andCallFake(function(
+                name, version, callback) {
+                  callback({
+                    transaction: function(name) {
+                      return {
+                        objectStore: function(name) {
+                          return {
+                            get: function(name) {
+                              return (done = true) ? request : null;
+                            }
+                          };
+                        }
+                      };
+                    }
+                  });
+                });
+
+            depot.getItem('item', function(result) {
+              test = result;
+            });
+
+            waitsFor(function() {
+              return done;
+            }, 'waiting for async', 1000);
+
+            runs(function() {
+              request.onsuccess({target: {result: {data: 'win'}}});
+              expect(test).toBe(success);
+            });
+
+          }
         });
+        it('should use INDEXEDDB and fail', function() {
+          // Test per storage type.
+          if (LocalDepot.deviceStorageType ===
+              LocalDepot.storageType.INDEXEDDB) {
+            var done, test = 'error', success = 'win', request = {};
+
+            // TODO (jam@): Move to mock.
+            spyOn(LocalDepot._Depot, 'openIndexedDb').andCallFake(function(
+                name, version, callback) {
+                  callback({
+                    transaction: function(name) {
+                      return {
+                        objectStore: function(name) {
+                          return {
+                            get: function(name) {
+                              return (done = true) ? request : null;
+                            }
+                          };
+                        }
+                      };
+                    }
+                  });
+                });
+
+            depot.getItem('item', function(result) {
+              test = result;
+            });
+
+            waitsFor(function() {
+              return done;
+            }, 'waiting for async', 1000);
+
+            runs(function() {
+              request.onerror('error');
+              expect(test).toBe(undefined);
+            });
+
+          }
+        });
+        // TODO (jam@): Add tests for WebSQL and localStorage.
       });
 
       describe('getKeys', function() {
-        it('should ', function() {
+        it('should use INDEXEDDB and work', function() {
+          // Test per storage type.
+          if (LocalDepot.deviceStorageType ===
+              LocalDepot.storageType.INDEXEDDB) {
+            var done, test, success = 'win', dbCursor = {};
+
+
+            // TODO (jam@): Move to mock.
+            spyOn(LocalDepot._Depot, 'openIndexedDb').andCallFake(function(
+                name, version, callback) {
+                  callback({
+                    transaction: function(name) {
+                      return {
+                        objectStore: function(name) {
+                          return {
+                            openCursor: function() {
+                              return (done = true) ? dbCursor : null;
+                            }
+                          };
+                        }
+                      };
+                    }
+                  });
+                });
+
+            depot.getKeys(function(result) {
+              test = result;
+            });
+
+            waitsFor(function() {
+              return done;
+            }, 'waiting for async', 1000);
+            // TODO (jam@): Improve test to include data.
+            runs(function() {
+              dbCursor.onsuccess({target: {result: null}});
+              expect(test).toEqual([]);
+            });
+
+          }
         });
+        it('should use INDEXEDDB and fail', function() {
+          // Test per storage type.
+          if (LocalDepot.deviceStorageType ===
+              LocalDepot.storageType.INDEXEDDB) {
+            var done, test, success = 'win', dbCursor = {};
+
+
+            // TODO (jam@): Move to mock.
+            spyOn(LocalDepot._Depot, 'openIndexedDb').andCallFake(function(
+                name, version, callback) {
+                  callback({
+                    transaction: function(name) {
+                      return {
+                        objectStore: function(name) {
+                          return {
+                            openCursor: function() {
+                              return (done = true) ? dbCursor : null;
+                            }
+                          };
+                        }
+                      };
+                    }
+                  });
+                });
+
+            depot.getKeys(function(result) {
+              test = result;
+            });
+
+            waitsFor(function() {
+              return done;
+            }, 'waiting for async', 1000);
+            // TODO (jam@): Improve test to include data.
+            runs(function() {
+              dbCursor.onerror('error');
+              expect(test).toEqual([]);
+            });
+
+          }
+        });
+        // TODO (jam@): Add tests for WebSQL and localStorage.
       });
 
       describe('setItem', function() {
         it('should ', function() {
         });
+        // TODO (jam@): Add tests for WebSQL and localStorage.
       });
 
       describe('hasItem', function() {
         it('should ', function() {
         });
+        // TODO (jam@): Add tests for WebSQL and localStorage.
       });
 
       describe('removeItem', function() {
         it('should ', function() {
         });
+        // TODO (jam@): Add tests for WebSQL and localStorage.
       });
 
       describe('clear', function() {
         it('should ', function() {
         });
+        // TODO (jam@): Add tests for WebSQL and localStorage.
       });
 
       describe('openIndexedDb', function() {
