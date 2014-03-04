@@ -173,13 +173,15 @@ if (typeof window !== 'undefined') {
             // Opening database to perform operation.
             LocalDepot._Depot.openIndexedDb(depot.name,
                 LocalDepot.indexedDbVersion, function(database) {
-                  var objectStore, transaction, keys = [];
+                  var objectStore, transaction, keys = [], keyCursor;
                   // Creating transaction.
                   transaction = database.transaction([depot.name]);
                   // Reference to object store.
                   objectStore = transaction.objectStore(depot.name);
-                  //
-                  objectStore.openCursor().onsuccess = function(evt) {
+                  // Getting reference to the cursor.
+                  keyCursor = objectStore.openCursor();
+                  // Success in getting cursor.
+                  keyCursor.onsuccess = function(evt) {
                     var cursor = evt.target.result;
                     if (cursor) {
                       keys.push(cursor.value.item);
@@ -189,6 +191,11 @@ if (typeof window !== 'undefined') {
                         callback(keys);
                       }
                     }
+                  };
+                  // Failed to get cursor.
+                  keyCursor.onerror = function(evt) {
+                    // TODO (jam@): Dispatch error.
+                    callback(keys);
                   };
                 }
             );
