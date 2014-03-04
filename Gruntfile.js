@@ -6,6 +6,17 @@ module.exports = function(grunt) {
     pkg: grunt.file.readJSON('package.json'),
     
     karma: {
+      local: {
+        options: {
+          configFile: 'karma.conf.js',
+          files: ['prototype/localdepot.js', 'specs/localdepot_test.js']
+        },
+        singleRun: true,
+        frameworks: ['jasmine'],
+        browsers: ['Chrome', 'Firefox', 'Opera']
+      }/*
+,
+      // Use below 'browsers' if BrowserStack account is enabled in config.
       chrome: {
         options: {
           configFile: 'karma.conf.js',
@@ -13,9 +24,7 @@ module.exports = function(grunt) {
         },
         singleRun: true,
         frameworks: ['jasmine'],
-        browsers: ['Chrome']
-        // Use below 'browsers' if BrowserStack account is enabled in config.
-        //browsers: ['bs_chrome_mac', 'bs_chrome_win']
+        browsers: ['bs_chrome_mac', 'bs_chrome_win']
       },
       firefox: {
         options: {
@@ -24,13 +33,9 @@ module.exports = function(grunt) {
         },
         singleRun: true,
         frameworks: ['jasmine'],
-        browsers: ['Firefox']
-        // Use below 'browsers' if BrowserStack account is enabled in config.
-        //browsers: ['bs_firefox_mac', 'bs_firefox_win']
+        browsers: ['bs_firefox_mac', 'bs_firefox_win']
       },
-      // Use below 'browsers' if BrowserStack account is enabled in config.
-      /*
-safari: {
+      safari: {
         options: {
           configFile: 'karma.conf.js',
           files: ['prototype/localdepot.js', 'specs/localdepot_test.js']

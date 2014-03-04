@@ -4,8 +4,8 @@ module.exports = function(config) {
   config.set({
     // global config of your BrowserStack account
     browserStack: {
-      username: 'XXXX',
-      accessKey: 'XXXX'
+      username: 'developers+browserstack@tradeshift.com',
+      accessKey: 'xQqKme1qpzznhmB7RzwJ'
     },
 
     // define browsers
