@@ -576,72 +576,76 @@ describe('LocalDepot', function() {
         // TODO (jam@): Add tests for WebSQL and localStorage.
       });
 
-      describe('openIndexedDb', function() {
-        it('should successfully open or create instance', function() {
-          var name, version, done, callback, outcome, request = {result: true};
+      // Test only if INDEXEDDB detected.
+      if (LocalDepot.deviceStorageType === LocalDepot.storageType.INDEXEDDB) {
+        describe('openIndexedDb', function() {
+          it('should successfully open or create instance', function() {
+            var name, version, done, callback, outcome,
+                request = {result: true};
 
-          callback = function(result) {
-            outcome = result;
-          };
+            callback = function(result) {
+              outcome = result;
+            };
 
-          spyOn(window.indexedDB, 'open').andCallFake(function(n, v) {
-            return (done = true) ? request : null;
+            spyOn(window.indexedDB, 'open').andCallFake(function(n, v) {
+              return (done = true) ? request : null;
+            });
+
+            waitsFor(function() {
+              if (done) {
+                request.onsuccess({});
+              }
+              return done;
+            }, 'waiting for async', 1000);
+
+            LocalDepot._Depot.openIndexedDb(name, version, callback);
+
+            runs(function() {
+              expect(outcome).toBe(true);
+              expect(window.indexedDB.open).toHaveBeenCalledWith(name, version);
+            });
           });
+          it('should fail to open or create instance', function() {
+            var name, version, done, callback, outcome, request = {};
 
-          waitsFor(function() {
-            if (done) {
-              request.onsuccess({});
-            }
-            return done;
-          }, 'waiting for async', 1000);
+            callback = function(result) {
+              outcome = result;
+            };
 
-          LocalDepot._Depot.openIndexedDb(name, version, callback);
+            spyOn(window.indexedDB, 'open').andCallFake(function(n, v) {
+              return (done = true) ? request : null;
+            });
 
-          runs(function() {
-            expect(outcome).toBe(true);
-            expect(window.indexedDB.open).toHaveBeenCalledWith(name, version);
+            waitsFor(function() {
+              if (done) {
+                request.onerror({});
+              }
+              return done;
+            }, 'waiting for async', 1000);
+
+            LocalDepot._Depot.openIndexedDb(name, version, callback);
+
+            runs(function() {
+              expect(outcome).toBe(null);
+              expect(window.indexedDB.open).toHaveBeenCalledWith(name, version);
+            });
           });
         });
-        it('should fail to open or create instance', function() {
-          var name, version, done, callback, outcome, request = {};
 
-          callback = function(result) {
-            outcome = result;
-          };
+        describe('closeIndexedDb', function() {
+          it('should successfully instance', function() {
+            var testDb = {
+              close: function() {}
+            };
 
-          spyOn(window.indexedDB, 'open').andCallFake(function(n, v) {
-            return (done = true) ? request : null;
-          });
+            spyOn(testDb, 'close');
 
-          waitsFor(function() {
-            if (done) {
-              request.onerror({});
-            }
-            return done;
-          }, 'waiting for async', 1000);
+            LocalDepot._Depot.closeIndexedDb(testDb);
 
-          LocalDepot._Depot.openIndexedDb(name, version, callback);
-
-          runs(function() {
-            expect(outcome).toBe(null);
-            expect(window.indexedDB.open).toHaveBeenCalledWith(name, version);
+            expect(testDb.close).toHaveBeenCalled();
           });
         });
-      });
-
-      describe('closeIndexedDb', function() {
-        it('should successfully instance', function() {
-          var testDb = {
-            close: function() {}
-          };
-
-          spyOn(testDb, 'close');
-
-          LocalDepot._Depot.closeIndexedDb(testDb);
-
-          expect(testDb.close).toHaveBeenCalled();
-        });
-      });
+      }
     });
 
   });
@@ -651,16 +655,124 @@ describe('LocalDepot', function() {
       expect(typeof LocalDepot.requestDepot).toBe('function');
       expect(LocalDepot._Depot.getItem.length).toBe(3);
     });
+    it('should return existing depot', function() {
+      var success, done, callback;
+
+      callback = function(result) {
+        success = result;
+      };
+
+      spyOn(LocalDepot, '_hasDepot').andCallFake(function(n, cb) {
+        cb(true);
+      });
+
+      spyOn(LocalDepot, '_getDepot').andCallFake(function(name) {
+        return (done = true);
+      });
+
+      LocalDepot.requestDepot('test', callback);
+
+      waitsFor(function() {
+        return done;
+      }, 'waiting for async', 1000);
+
+      runs(function() {
+        expect(success).toBe(true);
+      });
+    });
+    it('should attempt to create depot', function() {
+      var done, success, error;
+
+      success = function() {};
+      error = function() {};
+
+      spyOn(LocalDepot, '_hasDepot').andCallFake(function(n, cb) {
+        cb(false);
+        done = true;
+      });
+
+      spyOn(LocalDepot, '_createDepot');
+
+      LocalDepot.requestDepot('test', success, error);
+
+      waitsFor(function() {
+        return done;
+      }, 'waiting for async', 1000);
+
+      runs(function() {
+        expect(LocalDepot._createDepot).toHaveBeenCalledWith(
+            'test', success, error);
+      });
+    });
   });
 
   describe('LocalDepot.hasDepot', function() {
-    it('should ', function() {
+    it('should successfully make request for check', function() {
+      var name = 'test', callback = function() {};
+      spyOn(LocalDepot, '_hasDepot');
+      LocalDepot.hasDepot(name, callback);
+      expect(LocalDepot._hasDepot).toHaveBeenCalledWith(name, callback);
     });
+    it('should fail to make request for check due to bad name', function() {
+      var name = {}, callback = {test: function() {}};
+      spyOn(LocalDepot, '_hasDepot');
+      spyOn(callback, 'test');
+      LocalDepot.hasDepot(name, callback.test);
+      expect(LocalDepot._hasDepot).not.toHaveBeenCalled();
+      expect(callback.test).toHaveBeenCalledWith(false);
+    });
+    // TODO (jam@): Add missing test.
   });
 
   describe('LocalDepot.deleteDepot', function() {
-    it('should ', function() {
-    });
+    // Test per storage type.
+    if (LocalDepot.deviceStorageType === LocalDepot.storageType.INDEXEDDB) {
+      it('should successfully delete Depot using INDEXEDDB', function() {
+        var request = {}, done, callback, success;
+
+        callback = function(result) {
+          success = result;
+        };
+
+        spyOn(window.indexedDB, 'deleteDatabase').andCallFake(function(n) {
+          return (done = true) ? request : null;
+        });
+
+        LocalDepot.deleteDepot('test', callback);
+
+        waitsFor(function() {
+          return done;
+        }, 'waiting for async', 1000);
+
+        runs(function() {
+          request.onsuccess();
+          expect(success).toBe(true);
+        });
+      });
+      it('should fail to delete Depot using INDEXEDDB', function() {
+        var request = {}, done, callback, success;
+
+        callback = function(result) {
+          success = result;
+        };
+
+        spyOn(window.indexedDB, 'deleteDatabase').andCallFake(function(n) {
+          return (done = true) ? request : null;
+        });
+
+        LocalDepot.deleteDepot('test', callback);
+
+        waitsFor(function() {
+          return done;
+        }, 'waiting for async', 1000);
+
+        runs(function() {
+          request.onerror();
+          expect(success).toBe(false);
+        });
+      });
+    }
+    // TODO (jam@): Add tests for WebSQL and localStorage.
   });
 
   describe('LocalDepot._hasDepot', function() {
