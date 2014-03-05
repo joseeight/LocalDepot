@@ -286,7 +286,7 @@ if (typeof window !== 'undefined') {
             // IndexedDb doesn't have a simple exists method, so looking up
             // item and return boolean if returned.
             LocalDepot._Depot.getItem(depot, name, function(exists) {
-              callback(exists ? true : false);
+              callback((typeof exists !== 'undefined') ? true : false);
             });
           } else if (depot.storageType === LocalDepot.storageType.WEBSQL) {
             console.log('WEBSQL');
