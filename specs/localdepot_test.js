@@ -776,27 +776,136 @@ describe('LocalDepot', function() {
   });
 
   describe('LocalDepot._hasDepot', function() {
-    it('should ', function() {
-    });
+    // Test per storage type.
+    if (LocalDepot.deviceStorageType === LocalDepot.storageType.INDEXEDDB) {
+      it('should return successful check using INDEXEDDB', function() {
+        var name, callback, request = {}, done, success;
+
+        callback = function(result) {
+          success = result;
+        };
+
+        spyOn(window.indexedDB, 'open').andCallFake(function(n) {
+          return (done = true) ? request : null;
+        });
+
+        spyOn(LocalDepot._Depot, 'closeIndexedDb');
+
+        LocalDepot._hasDepot(name, callback);
+
+        waitsFor(function() {
+          return done;
+        }, 'waiting for async', 1000);
+
+        runs(function() {
+          request.onsuccess();
+          expect(success).toBe(true);
+          expect(LocalDepot._Depot.closeIndexedDb).toHaveBeenCalled();
+        });
+      });
+      it('should return failed check using INDEXEDDB', function() {
+        var name, callback, request = {}, done, success;
+
+        callback = function(result) {
+          success = result;
+        };
+
+        spyOn(window.indexedDB, 'open').andCallFake(function(n) {
+          return (done = true) ? request : null;
+        });
+
+        spyOn(LocalDepot._Depot, 'closeIndexedDb');
+
+        LocalDepot._hasDepot(name, callback);
+
+        waitsFor(function() {
+          return done;
+        }, 'waiting for async', 1000);
+
+        runs(function() {
+          request.onerror();
+          expect(success).toBe(false);
+          expect(LocalDepot._Depot.closeIndexedDb).toHaveBeenCalled();
+        });
+      });
+    }
+    // TODO (jam@): Add tests for WebSQL and localStorage.
   });
 
   describe('LocalDepot._getDepot', function() {
-    it('should ', function() {
+    it('should create new Depot', function() {
+      spyOn(LocalDepot, 'Depot').andCallThrough();
+
+      var name = 'test', depot;
+
+      depot = LocalDepot._getDepot(name);
+
+      expect(depot.constructor).toBe(LocalDepot.Depot);
+      expect(LocalDepot.Depot).toHaveBeenCalledWith(name,
+          LocalDepot.deviceStorageType);
     });
   });
 
   describe('LocalDepot._createDepot', function() {
-    it('should ', function() {
-    });
+    // Test per storage type.
+    if (LocalDepot.deviceStorageType === LocalDepot.storageType.INDEXEDDB) {
+      it('should create Depot database using INDEXEDDB', function() {
+        var name = 'test', success, error;
+
+        success = function() {};
+        error = function() {};
+
+        spyOn(LocalDepot, '_createIndexedDbInstance');
+
+        LocalDepot._createDepot(name, success, error);
+
+        expect(LocalDepot._createIndexedDbInstance).toHaveBeenCalledWith(
+            name, success, error);
+      });
+    }
+    // TODO (jam@): Add tests for WebSQL and localStorage.
   });
 
   describe('LocalDepot._createIndexedDbInstance', function() {
-    it('should ', function() {
-    });
+    if (LocalDepot.deviceStorageType === LocalDepot.storageType.INDEXEDDB) {
+      it('should create new instace', function() {
+        var name, callback, done, request = {};
+
+        callback = {
+          success: function() {},
+          error: function() {}
+        };
+
+        spyOn(LocalDepot, 'Depot');
+        spyOn(LocalDepot._Depot, 'closeIndexedDb');
+        spyOn(window.indexedDB, 'open').andCallFake(function(n) {
+          return (done = true) ? request : null;
+        });
+
+        spyOn(callback, 'success');
+
+        LocalDepot._createIndexedDbInstance(
+            name, callback.success, callback.error);
+
+        waitsFor(function() {
+          return done;
+        }, 'waiting for async', 1000);
+
+        runs(function() {
+          request.onsuccess({});
+          expect(LocalDepot._Depot.closeIndexedDb).toHaveBeenCalled();
+          expect(LocalDepot.Depot).toHaveBeenCalledWith(
+              name, LocalDepot.storageType.INDEXEDDB);
+          expect(callback.success).toHaveBeenCalled();
+        });
+      });
+    }
   });
 
   describe('LocalDepot._getStorageSupportedByBrowser', function() {
     var agent = navigator.userAgent.toLowerCase();
+    // TODO (jam@): Improve logic, should do capability check as oppose
+    // to browser detection.
     it('should detect storage based on browser expectations', function() {
       if (agent.indexOf('chrome') > -1 || agent.indexOf('firefox') > -1) {
         expect(LocalDepot.deviceStorageType).toBe(
