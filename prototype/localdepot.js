@@ -440,8 +440,10 @@ if (typeof window !== 'undefined') {
         if (typeof name === 'string' && typeof callback === 'function') {
           LocalDepot._hasDepot(name, callback);
         } else {
+          if (typeof callback === 'function') {
+            callback(false);
+          }
           // TODO (jam@): Dispatch error.
-          callback(false);
         }
       };
       /**
@@ -450,6 +452,7 @@ if (typeof window !== 'undefined') {
        * @param {function(boolean)=} opt_callback Operation result handler.
        */
       LocalDepot.deleteDepot = function deleteDepot(name, opt_callback) {
+        // TODO (jam@): Move actual logic to a private method.
         if (LocalDepot.deviceStorageType === // Using IndexedDb.
             LocalDepot.storageType.INDEXEDDB) {
           // Making request to delete.

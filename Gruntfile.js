@@ -4,7 +4,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
 
     pkg: grunt.file.readJSON('package.json'),
-    
+
     karma: {
       local: {
         options: {
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         },
         singleRun: true,
         frameworks: ['jasmine'],
-        browsers: ['Chrome', 'Firefox', 'Opera']
+        browsers: ['Chrome', 'Firefox']
       }/*
 ,
       // Use below 'browsers' if BrowserStack account is enabled in config.
@@ -64,17 +64,17 @@ module.exports = function(grunt) {
       }
 */
     },
-    
+
     // JSHint with options.
     jshint: {
       options: {
-        jshintrc: '.jshintrc',
+        jshintrc: '.jshintrc'
       },
       all: [
         '.'
       ]
     },
-    
+
     // Command-line tasks.
     shell: {
       fixjsstyle: {
@@ -92,7 +92,7 @@ module.exports = function(grunt) {
         command: 'gjslint --strict prototype/localdepot.js specs/localdepot_test.js'
       }
     },
-    
+
     // Minification.
     uglify: {
       my_target: {
@@ -106,7 +106,7 @@ module.exports = function(grunt) {
         }
       }
     },
-    
+
     // Unit tests.
     jasmine: {
       src: 'prototype/localdepot.js',
@@ -114,7 +114,7 @@ module.exports = function(grunt) {
         specs: 'specs/localdepot_test.js'
       }
     },
-    
+
     // Git hooks with Grunt.
     githooks: {
       all: {
@@ -130,5 +130,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-githooks');
   grunt.loadNpmTasks('grunt-karma');
 
+  grunt.registerTask('closure', ['shell']);
   grunt.registerTask('default', ['shell', 'jshint', 'karma', 'uglify']);
 };
