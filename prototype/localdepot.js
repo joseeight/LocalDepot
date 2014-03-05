@@ -146,14 +146,16 @@ if (typeof window !== 'undefined') {
                       } else {
                         callback(undefined);
                       }
-                      // Closing database.
-                      LocalDepot._Depot.closeIndexedDb(database);
                     }
+                    // Closing database.
+                    LocalDepot._Depot.closeIndexedDb(database);
                   };
                   // Error handler, makes callback.
                   request.onerror = function(error) {
                     // TODO (jam@): Determine appropiate return value.
-                    callback(undefined);
+                    if (typeof callback === 'function') {
+                      callback(undefined);
+                    }
                     // Closing database.
                     LocalDepot._Depot.closeIndexedDb(database);
                   };
@@ -190,12 +192,18 @@ if (typeof window !== 'undefined') {
                       if (typeof callback === 'function') {
                         callback(keys);
                       }
+                      // Closing database.
+                      LocalDepot._Depot.closeIndexedDb(database);
                     }
                   };
                   // Failed to get cursor.
                   keyCursor.onerror = function(evt) {
                     // TODO (jam@): Dispatch error.
-                    callback(keys);
+                    if (typeof callback === 'function') {
+                      callback(keys);
+                    }
+                    // Closing database.
+                    LocalDepot._Depot.closeIndexedDb(database);
                   };
                 }
             );
@@ -313,13 +321,15 @@ if (typeof window !== 'undefined') {
                   request.onsuccess = function(evt) {
                     if (typeof callback === 'function') {
                       callback(true);
-                      // Closing database.
-                      LocalDepot._Depot.closeIndexedDb(database);
                     }
+                    // Closing database.
+                    LocalDepot._Depot.closeIndexedDb(database);
                   };
                   // Error handler, makes callback.
                   request.onerror = function(error) {
-                    callback(false);
+                    if (typeof callback === 'function') {
+                      callback(false);
+                    }
                     // Closing database.
                     LocalDepot._Depot.closeIndexedDb(database);
                   };
