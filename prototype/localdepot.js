@@ -256,12 +256,12 @@ if (typeof window !== 'undefined') {
                   // Putting item in table.
                   request = objectStore.put({item: name, data: itemValue});
                   //request.onsuccess = function (e) {};
-                  request.onerror = function(e) {
-                    // TODO (jam@): Add error handling.
-                    if (typeof opt_callback === 'function') {
-                      opt_callback(false);
-                    }
-                  };
+                  //request.onerror = function(e) {
+                  // TODO (jam@): Add error handling.
+                  //if (typeof opt_callback === 'function') {
+                  //opt_callback(false);
+                  //}
+                  //};
                 }
             );
           } else if (depot.storageType === LocalDepot.storageType.WEBSQL) {
