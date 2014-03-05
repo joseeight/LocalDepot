@@ -412,7 +412,50 @@ describe('LocalDepot', function() {
       });
 
       describe('hasItem', function() {
-        it('should ', function() {
+        it('should use INDEXEDDB and work', function() {
+          var test, done;
+          spyOn(LocalDepot._Depot, 'getItem').andCallFake(function(
+              dp, nm, cb) {
+                // This makes sure that even null is a valid data store.
+                cb(null);
+                done = true;
+              });
+
+          depot.hasItem('name', function(result) {
+            test = result;
+          });
+
+          waitsFor(function() {
+            return done;
+          }, 'waiting for async', 1000);
+
+          runs(function() {
+            expect(test).toBe(true);
+            expect(LocalDepot._Depot.getItem).toHaveBeenCalledWith(
+                depot, 'name', jasmine.any(Function));
+          });
+        });
+        it('should use INDEXEDDB and fail', function() {
+          var test, done;
+          spyOn(LocalDepot._Depot, 'getItem').andCallFake(function(
+              dp, nm, cb) {
+                cb(undefined);
+                done = true;
+              });
+
+          depot.hasItem('name', function(result) {
+            test = result;
+          });
+
+          waitsFor(function() {
+            return done;
+          }, 'waiting for async', 1000);
+
+          runs(function() {
+            expect(test).toBe(false);
+            expect(LocalDepot._Depot.getItem).toHaveBeenCalledWith(
+                depot, 'name', jasmine.any(Function));
+          });
         });
         // TODO (jam@): Add tests for WebSQL and localStorage.
       });
